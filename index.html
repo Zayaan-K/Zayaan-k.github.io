@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description"
+        content="Zayaan Khandakar — Electrical engineering portfolio. FPGA processors, graphics, systems software, machine learning, and embedded instrumentation.">
+    <meta name="theme-color" content="#101418">
+    <title>Engineering portfolio | Zayaan Khandakar</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/site.js"></script>
+    <script defer src="assets/sierpinski.js"></script>
+</head>
+
+<body><a class="skip" href="#main">Skip to content</a>
+    <header><a class="brand" href="index.html" aria-label="Zayaan Khandakar home"><span
+                class="monogram">ZK<span>_</span></span><span>ZAYAAN KHANDAKAR</span></a>
+        <nav aria-label="Main navigation"><a href="index.html#projects">Projects</a><a href="index.html#about">About</a>
+    </header>
+    <main id="main">
+        <section class="hero">
+            <div class="hero-copy">
+                <div class="hero-lab sierpinski-panel">
+                    <canvas id="sierpinski" role="img" aria-label="Animated Sierpiński triangle"></canvas>
+
+                    <div class="lab-bottom sierpinski-controls">
+                        <button id="sierpinski-pause" type="button" aria-pressed="false">
+                            Pause animation
+                        </button>
+                    </div>
+                </div>
+
+                <a class="button" href="#projects">
+                    Projects <span>07</span>
+                </a>
+            </div>
+
+            <div class="hero-lab">
+                <div class="lab-top"><span></span><span></span></div><canvas id="cube"></canvas>
+                <div class="lab-bottom"><span></span><button id="motion" type="button" aria-pressed="false"></button>
+                </div>
+                <p class="lab-caption"></p>
+            </div>
+
+        </section>
+
+        </section>
+        <section id="projects" class="projects">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">01 / PORTFOLIO</p>
+                    <h2>Projects<span class="accent">.</span></h2>
+                </div>
+            </div>
+            <nav class="category-nav" aria-label="Project categories"><a href="#hdl">HDL<span>02</span></a><a
+                    href="#software">Software<span>02</span></a><a href="#machine-learning">Machine
+                    Learning<span>02</span></a><a href="#embedded">Analog/Embedded Systems<span>01</span></a></nav>
+            <section id="hdl" class="category">
+                <div class="category-title"><span>01</span>
+                    <h3>HDL</h3>
+                </div>
+                <div class="project-grid">
+                    <article class="project-card"><a class="card-link" href="projects/cpu-rasterizer.html">
+                            <div class="card-top"><span class="project-number">/01</span><span class="status"></span></div>
+                            <h4>CPU Rasterizer</h4>
+                            <p>An RV32I system-on-chip paired with a fixed-function triangle rasterizer on the Basys 3
+                                FPGA.</p>
+                            <div class="tags"><span>Verilog</span><span>RV32I</span><span>FPGA</span><span>VGA</span>
+                            </div>
+                            <div class="card-bottom"><span>View project</span><span aria-hidden="true">+</span></div>
+                        </a></article>
+                    <article class="project-card"><a class="card-link" href="projects/custom-cpu-pong.html">
+                            <div class="card-top"><span class="project-number">/02</span><span class="status"></span></div>
+                            <h4>Custom CPU with Pong</h4>
+                            <p>A custom 16-bit processor with memory-mapped game controls, PS/2 input, and VGA graphics.
+                            </p>
+                            <div class="tags"><span>Verilog</span><span>CPU
+                                    design</span><span>PS/2</span><span>VGA</span></div>
+                            <div class="card-bottom"><span>View project</span><span aria-hidden="true">+</span></div>
+                        </a></article>
+                </div>
+            </section>
+            <section id="software" class="category">
+                <div class="category-title"><span>02</span>
+                    <h3>Software</h3>
+                </div>
+                <div class="project-grid">
+                    <article class="project-card"><a class="card-link" href="projects/ps1-emulator.html">
+                            <div class="card-top"><span class="project-number">/03</span><span class="status">In
+                                    Development</span></div>
+                            <h4>PS1 Emulator</h4>
+                            <p>A C++ PlayStation emulator exploring MIPS execution, memory mapping, and the hardware
+                                behind a classic console.</p>
+                            <div class="tags"><span>C++</span><span>MIPS</span><span>Emulation</span></div>
+                            <div class="card-bottom"><span>View project</span><span aria-hidden="true">+</span></div>
+                        </a></article>
+                    <article class="project-card"><a class="card-link" href="projects/risc-v-compiler.html">
+                            <div class="card-top"><span class="project-number">/04</span><span class="status"></span></div>
+                            <h4>RISC-V Compiler</h4>
+                            <p>A compiler project exploring how a higher-level program becomes instructions for a RISC-V
+                                processor.</p>
+                            <div class="tags"><span>C++</span><span>RISC-V</span><span>Compilers</span></div>
+                            <div class="card-bottom"><span>View project</span><span aria-hidden="true">+</span></div>
+                        </a></article>
+                </div>
+            </section>
+            <section id="machine-learning" class="category">
+                <div class="category-title"><span>03</span>
+                    <h3>Machine Learning</h3>
+                </div>
+                <div class="project-grid">
+                    <article class="project-card"><a class="card-link" href="projects/3d-cube-view.html">
+                            <div class="card-top"><span class="project-number">/05</span><span class="status"></span></div>
+                            <h4>3D cube view</h4>
+                            <p>A multi-view cube reconstruction project combining camera geometry, neural networks, and
+                                an interactive viewer.</p>
+                            <div class="tags">
+                                <span>Python</span><span>PyTorch</span><span>NumPy</span><span>PySide6</span>
+                            </div>
+                            <div class="card-bottom"><span>View project</span><span aria-hidden="true">+</span></div>
+                        </a></article>
+                    <article class="project-card"><a class="card-link" href="projects/3d-gaussian-view.html">
+                            <div class="card-top"><span class="project-number">/06</span><span class="status"></span></div>
+                            <h4>3D gaussian view</h4>
+                            <p>An exploration of 3D Gaussian scene representations, extending the camera and
+                                reconstruction work beyond a cube.</p>
+                            <div class="tags"><span>Python</span><span>3D graphics</span><span>Machine learning</span>
+                            </div>
+                            <div class="card-bottom"><span>View project</span><span aria-hidden="true">+</span></div>
+                        </a></article>
+                </div>
+            </section>
+            <section id="embedded" class="category">
+                <div class="category-title"><span>04</span>
+                    <h3>Analog/Embedded Systems</h3>
+                </div>
+                <div class="project-grid">
+                    <article class="project-card"><a class="card-link" href="projects/modular-protocol-debugger.html">
+                            <div class="card-top"><span class="project-number">/07</span><span class="status"></span></div>
+                            <h4>Modular Protocol Debugger</h4>
+                            <p>A project centered on modular tools for inspecting and debugging communication between
+                                embedded devices.</p>
+                            <div class="tags"><span>Embedded
+                                    systems</span><span>Instrumentation</span><span>Debugging</span></div>
+                            <div class="card-bottom"><span>View project</span><span aria-hidden="true">+</span></div>
+                        </a></article>
+                </div>
+            </section>
+        </section>
+
+    </main>
+    <footer><span>© 2026 Zayaan Khandakar</span></footer>
+</body>
+
+</html>
