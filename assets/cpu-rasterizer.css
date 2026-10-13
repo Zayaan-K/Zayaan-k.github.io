@@ -1,0 +1,115 @@
+.signal-flow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 28px 0 0;
+}
+
+.signal-flow li {
+    padding: 18px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+}
+
+.signal-flow strong {
+    display: block;
+    color: var(--accent);
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.signal-flow span {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.register-map {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.register-map caption {
+    text-align: left;
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.register-map th,
+.register-map td {
+    border-bottom: 1px solid var(--line);
+    padding: 12px 10px;
+    vertical-align: top;
+}
+
+.register-map th {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.register-map td {
+    color: var(--muted);
+}
+
+.register-map code {
+    color: var(--accent);
+    white-space: nowrap;
+}
+
+.coverage-rule {
+    background: var(--panel);
+    border-left: 2px solid var(--accent);
+    padding: 18px 20px;
+    margin: 24px 0;
+}
+
+.coverage-rule code {
+    display: block;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.coverage-rule p {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 10px 0 0;
+}
+
+.verification-list {
+    color: var(--muted);
+    padding-left: 20px;
+}
+
+.verification-list li {
+    padding-left: 4px;
+    margin-bottom: 12px;
+}
+
+.verification-list strong {
+    color: var(--text);
+    font-weight: 500;
+}
+
+@media (max-width: 1000px) {
+    .signal-flow {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .register-map {
+        font-size: 12px;
+    }
+
+    .register-map th,
+    .register-map td {
+        padding: 10px 4px;
+    }
+}

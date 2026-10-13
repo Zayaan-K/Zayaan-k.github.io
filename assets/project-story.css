@@ -1,12 +1,12 @@
-/* PS1 project: a continuous development story with unnumbered milestones. */
-.ps1-project .project-summary {
+/* Shared project pages: a continuous story with unnumbered milestones. */
+.story-project .project-summary {
     max-width: 660px;
     color: var(--muted);
     font-size: 18px;
     margin-bottom: 28px;
 }
 
-.ps1-project .detail-body {
+.story-project .detail-body {
     grid-template-columns: minmax(0, 1fr) 250px;
     gap: 64px;
 }
@@ -148,7 +148,7 @@
 }
 
 @media (max-width: 1000px) {
-    .ps1-project .detail-body {
+    .story-project .detail-body {
         gap: 32px;
         grid-template-columns: minmax(0, 1fr) 220px;
     }
@@ -159,7 +159,7 @@
 }
 
 @media (max-width: 700px) {
-    .ps1-project .detail-body {
+    .story-project .detail-body {
         grid-template-columns: minmax(0, 1fr);
         gap: 40px;
     }

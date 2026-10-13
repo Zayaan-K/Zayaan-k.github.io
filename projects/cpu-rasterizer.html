@@ -1,58 +1,165 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Page Under Construction | Zayaan Khandakar</title>
-
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #101418;
-      color: #edf1ee;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-
-    main {
-      max-width: 600px;
-      padding: 32px;
-    }
-
-    h1 {
-      color: #cdf86f;
-      font-size: clamp(32px, 6vw, 48px);
-    }
-
-    p {
-      color: #a7b1b6;
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 24px;
-      border: 1px solid #cdf86f;
-      border-radius: 6px;
-      color: #cdf86f;
-      text-decoration: none;
-    }
-
-    a:hover {
-      background: #cdf86f;
-      color: #101418;
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="An RV32I processor and fixed-function triangle rasterizer built in SystemVerilog for the Basys 3 FPGA, with VGA output and a Sierpinski triangle demo.">
+    <meta name="theme-color" content="#101418">
+    <title>CPU Rasterizer | Zayaan Khandakar</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/project-story.css">
+    <link rel="stylesheet" href="../assets/cpu-rasterizer.css">
 </head>
-
 <body>
-  <main>
-    <h1>Page Under Construction</h1>
-  </main>
+    <a class="skip" href="#main">Skip to content</a>
+    <header>
+        <a class="brand" href="../index.html" aria-label="Zayaan Khandakar home">
+            <span class="monogram">ZK<span>_</span></span><span>ZAYAAN KHANDAKAR</span>
+        </a>
+        <nav aria-label="Main navigation"><a href="../index.html#projects">Projects</a></nav>
+    </header>
+    <main id="main" class="detail story-project rasterizer-project">
+        <a class="back" href="../index.html#hdl">&larr; Back to HDL projects</a>
+        <section class="detail-hero" aria-labelledby="project-title">
+            <p class="eyebrow">HDL / FPGA SYSTEMS</p>
+            <h1 id="project-title">CPU Rasterizer<span class="accent">.</span></h1>
+            <p class="subtitle">A RISC-V processor driving custom graphics hardware.</p>
+            <p class="project-summary">An RV32I system-on-chip paired with a fixed-function triangle
+                rasterizer. Built in SystemVerilog for the Basys 3 FPGA, with a framebuffer and VGA output.</p>
+            <div class="tags" aria-label="Project technologies">
+                <span>SystemVerilog</span><span>RV32I</span><span>Basys 3</span><span>VGA</span>
+            </div>
+            <a class="text-link" href="#demo">View the Sierpiński demo &darr;</a>
+        </section>
+        <div class="detail-body">
+            <article class="project-story" aria-label="CPU rasterizer development story">
+                <section class="story-entry" aria-labelledby="cpu">
+                    <p class="eyebrow">THE FOUNDATION</p>
+                    <h2 id="cpu">Building the RV32I processor</h2>
+                    <p>The single-cycle CPU combines an ALU, register file, instruction decoder,
+                        immediate generator, and branch logic. It supports arithmetic, logical operations,
+                        loads, stores, branches, and jumps, with separate instruction and data memories.</p>
+                    <p>Programs are loaded as 32-bit hexadecimal instructions from a memory file.
+                        The processor runs the program and submits drawing commands to the rasterizer
+                        through ordinary memory writes.</p>
+                    <ol class="signal-flow" aria-label="Data flow from program execution to display">
+                        <li><strong>RV32I processor &rarr;</strong><span>Executes the program and writes triangle commands.</span></li>
+                        <li><strong>Triangle rasterizer &rarr;</strong><span>Determines covered pixels and writes their colors.</span></li>
+                        <li><strong>Framebuffer &amp; VGA</strong><span>Stores the image and sends it to the display.</span></li>
+                    </ol>
+                </section>
+                <section class="story-entry" aria-labelledby="commands">
+                    <p class="eyebrow">CONNECTING SOFTWARE TO HARDWARE</p>
+                    <h2 id="commands">Submitting triangle commands</h2>
+                    <p>The rasterizer's registers begin at <code>0x40000000</code>. The CPU writes three
+                        vertex positions and a color, then sets the start bit. Busy and done flags allow
+                        software to coordinate sequential triangle submissions.</p>
+                    <table class="register-map">
+                        <caption>Memory-mapped drawing interface</caption>
+                        <thead><tr><th scope="col">Address</th><th scope="col">Register</th><th scope="col">Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>0x40000000</code></td><td>Control</td><td>Start a triangle or clear the done flag.</td></tr>
+                            <tr><td><code>0x40000004</code></td><td>Status</td><td>Read busy and done flags.</td></tr>
+                            <tr><td><code>0x40000008</code><br>through <code>0x4000001C</code></td><td>Vertices</td><td>Six registers for x and y coordinates.</td></tr>
+                            <tr><td><code>0x40000020</code></td><td>Color</td><td>Set the triangle's 12-bit RGB color.</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section class="story-entry" aria-labelledby="rasterization">
+                    <p class="eyebrow">TURNING VERTICES INTO PIXELS</p>
+                    <h2 id="rasterization">Rasterizing a triangle</h2>
+                    <p>Triangle setup calculates a bounding box clipped to the framebuffer and three
+                        edge equations. It normalizes the edge direction for consistent coverage tests
+                        and skips zero-area triangles or triangles outside the display.</p>
+                    <p>The rasterizer traverses the bounding box one pixel at a time. Edge values are
+                        updated by addition as it moves across each row, avoiding a fresh multiplication
+                        for every pixel. Pixels that pass all three edge tests are written to the framebuffer.</p>
+                    <div class="coverage-rule">
+                        <code>E(x, y) = Ax + By + C</code>
+                        <p>Moving one pixel right adds A; moving one pixel down adds B.</p>
+                    </div>
+                    <p>A top-left edge rule determines which triangle owns a pixel exactly on a shared
+                        edge. Each triangle uses one flat color.</p>
+                </section>
+                <section class="story-entry" aria-labelledby="display">
+                    <p class="eyebrow">THE INITIAL HARDWARE TEST</p>
+                    <h2 id="display">Displaying the first triangle</h2>
+                    <p>The framebuffer stores 320 &times; 240 pixels with four bits each for red, green,
+                        and blue. VGA scan-out scales each stored pixel to a 2 &times; 2 block for
+                        640 &times; 480 output.</p>
+                    <p>Because framebuffer reads are synchronous, the display logic delays the active-video
+                        and synchronization signals to align them with pixel data. The small filled triangle
+                        below was the initial test of the drawing and display path on hardware.</p>
+                    <figure class="project-media">
+                        <a href="../assets/CPU_Rasterizer/first-triangle.jpg" aria-label="Open full-size initial triangle test photo">
+                            <img src="../assets/CPU_Rasterizer/first-triangle.jpg" width="4032" height="3024"
+                                alt="Initial hardware test showing a small yellow filled triangle near the top-left of a monitor"
+                                loading="lazy" decoding="async">
+                        </a>
+                        <figcaption><span>Initial hardware test</span>A small filled triangle displayed through the VGA output.</figcaption>
+                    </figure>
+                </section>
+                <section class="story-entry" aria-labelledby="verification">
+                    <p class="eyebrow">CHECKING THE SYSTEM</p>
+                    <h2 id="verification">Verifying the drawing path</h2>
+                    <p>The repository includes module testbenches and a CPU-to-rasterizer integration
+                        test. These check instruction behavior, triangle setup, pixel coverage, and
+                        framebuffer writes.</p>
+                    <ul class="verification-list">
+                        <li><strong>CPU modules:</strong> ALU operations, register access, branches,
+                            immediates, and load/store formatting.</li>
+                        <li><strong>Rasterizer modules:</strong> triangle setup, coverage rules,
+                            completion flags, and sequential submissions.</li>
+                        <li><strong>System integration:</strong> a CPU program starts a triangle draw;
+                            the testbench checks completion, CPU fault signals, and the expected ten
+                            colored framebuffer pixels.</li>
+                    </ul>
+                </section>
+                <section class="story-entry" aria-labelledby="demo">
+                    <p class="eyebrow">THE MAIN PROJECT DEMO</p>
+                    <h2 id="demo">Drawing the Sierpiński triangle</h2>
+                    <p>The main demo renders a Sierpiński triangle through repeated triangle submissions.
+                        The processor supplies the geometry and drawing commands; the hardware rasterizer
+                        fills the triangles and the VGA path displays the result.</p>
+                    <p>The pattern brings the full system together: instruction execution,
+                        memory-mapped control, consistent triangle edges, framebuffer storage, and display timing.</p>
+                    <figure class="project-media">
+                        <a href="../assets/CPU_Rasterizer/sierpinski-triangle.jpg" aria-label="Open full-size Sierpiński triangle demo photo">
+                            <img src="../assets/CPU_Rasterizer/sierpinski-triangle.jpg" width="4032" height="3024"
+                                alt="Main hardware demo showing a large yellow Sierpiński triangle with repeating black triangular gaps on a monitor"
+                                loading="lazy" decoding="async">
+                        </a>
+                        <figcaption><span>Sierpiński triangle demo</span>The main project demonstration, rendered by the CPU-controlled rasterizer.</figcaption>
+                    </figure>
+                </section>
+            </article>
+            <aside class="story-sidebar" aria-labelledby="project-details">
+                <h2 id="project-details" class="eyebrow">SUMMARY</h2>
+                <dl>
+                    <dt>Hardware</dt><dd>Digilent Basys 3<br>Xilinx Artix-7</dd>
+                    <dt>Language &amp; tools</dt><dd>SystemVerilog / Verilog<br>Vivado</dd>
+                    <dt>Processor</dt><dd>Single-cycle RV32I</dd>
+                    <dt>Framebuffer</dt><dd>320 &times; 240<br>12-bit RGB</dd>
+                    <dt>Display</dt><dd>640 &times; 480 VGA</dd>
+                    <dt>Main demo</dt><dd>Sierpiński triangle</dd>
+                </dl>
+                <a class="button" href="https://github.com/Zayaan-K/RISC-V-SoC-integrated-with-Fixed-Function-Triangle-Rasterizer">View source</a>
+                <nav class="story-nav" aria-label="Project sections">
+                    <a href="#cpu">RV32I processor</a>
+                    <a href="#commands">Triangle commands</a>
+                    <a href="#rasterization">Rasterization</a>
+                    <a href="#display">Initial hardware test</a>
+                    <a href="#verification">Verification</a>
+                    <a href="#demo">Sierpiński demo</a>
+                </nav>
+            </aside>
+        </div>
+        <nav class="project-pagination" aria-label="Project navigation">
+            <a href="../index.html#projects"><span>&larr; Portfolio</span><strong>All projects</strong></a>
+            <a href="custom-cpu-pong.html"><span>Next project &rarr;</span><strong>Custom CPU with Pong</strong></a>
+        </nav>
+    </main>
+    <footer><span>&copy; 2026 Zayaan Khandakar</span></footer>
 </body>
 </html>
