@@ -1,58 +1,179 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Page Under Construction | Zayaan Khandakar</title>
-
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #101418;
-      color: #edf1ee;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-
-    main {
-      max-width: 600px;
-      padding: 32px;
-    }
-
-    h1 {
-      color: #cdf86f;
-      font-size: clamp(32px, 6vw, 48px);
-    }
-
-    p {
-      color: #a7b1b6;
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 24px;
-      border: 1px solid #cdf86f;
-      border-radius: 6px;
-      color: #cdf86f;
-      text-decoration: none;
-    }
-
-    a:hover {
-      background: #cdf86f;
-      color: #101418;
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="A custom 16-bit CPU running Pong on the Basys 3 FPGA, built in Verilog with a custom ISA, memory-mapped game state, PS/2 input, and VGA rendering.">
+    <meta name="theme-color" content="#101418">
+    <title>Custom CPU with Pong | Zayaan Khandakar</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/project-story.css">
+    <link rel="stylesheet" href="../assets/project-technical.css">
 </head>
-
 <body>
-  <main>
-    <h1>Page Under Construction</h1>
-  </main>
+    <a class="skip" href="#main">Skip to content</a>
+    <header>
+        <a class="brand" href="../index.html" aria-label="Zayaan Khandakar home">
+            <span class="monogram">ZK<span>_</span></span><span>ZAYAAN KHANDAKAR</span>
+        </a>
+        <nav aria-label="Main navigation"><a href="../index.html#projects">Projects</a></nav>
+    </header>
+    <main id="main" class="detail story-project pong-project">
+        <a class="back" href="../index.html#hdl">&larr; Back to HDL projects</a>
+        <section class="detail-hero" aria-labelledby="project-title">
+            <p class="eyebrow">HDL / PROCESSOR DESIGN</p>
+            <h1 id="project-title">Custom CPU with Pong<span class="accent">.</span></h1>
+            <p class="subtitle">A custom instruction set running an interactive game.</p>
+            <p class="project-summary">A 16-bit processor built in Verilog for the Basys 3 FPGA.
+                The CPU executes the Pong game program, while dedicated hardware handles
+                keyboard input and VGA rendering.</p>
+            <div class="tags" aria-label="Project technologies">
+                <span>Verilog</span><span>Custom ISA</span><span>Basys 3</span><span>PS/2</span><span>VGA</span>
+            </div>
+            <a class="text-link" href="#demo">Watch the Pong demo &darr;</a>
+        </section>
+        <div class="detail-body">
+            <article class="project-story" aria-label="Custom CPU and Pong development story">
+                <section class="story-entry" aria-labelledby="cpu">
+                    <p class="eyebrow">THE FOUNDATION</p>
+                    <h2 id="cpu">Building the 16-bit processor</h2>
+                    <p>The CPU combines a 16-bit ALU, sixteen general-purpose registers, an 8-bit
+                        program counter, instruction memory, and a control unit. The datapath reads
+                        operands, executes an operation, and selects an ALU result, memory value,
+                        or immediate for register writeback.</p>
+                    <p>The ALU supports arithmetic, bitwise logic, shifts, and comparisons. Stored
+                        zero and carry/borrow flags drive conditional jumps in the game program.</p>
+                    <ol class="signal-flow" aria-label="Data flow through the Pong system">
+                        <li><strong>Custom CPU &rarr;</strong><span>Executes the Pong program and updates game state.</span></li>
+                        <li><strong>Game registers &rarr;</strong><span>Connect instructions to inputs, positions, and scores.</span></li>
+                        <li><strong>VGA renderer</strong><span>Draws the current game state directly to the display.</span></li>
+                    </ol>
+                </section>
+                <section class="story-entry" aria-labelledby="isa">
+                    <p class="eyebrow">DEFINING THE INSTRUCTIONS</p>
+                    <h2 id="isa">Designing a custom ISA</h2>
+                    <p>Instructions are 16 bits wide. The top bit selects the ALU or non-ALU class,
+                        followed by a four-bit opcode. ALU instructions read two registers and write
+                        the result back to the first; comparisons update the flags without writing a result.</p>
+                    <p>The non-ALU class includes immediate loads, memory-mapped loads and stores,
+                        and unconditional or flag-based jumps. Immediate loads use a seven-bit constant,
+                        and jumps use an eight-bit instruction address.</p>
+                    <table class="register-map">
+                        <caption>ALU instruction encoding used by the decoder</caption>
+                        <thead><tr><th scope="col">Bits</th><th scope="col">Field</th><th scope="col">Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>15</code></td><td>Class</td><td>1 selects an ALU instruction.</td></tr>
+                            <tr><td><code>14:11</code></td><td>Opcode</td><td>Select the ALU operation.</td></tr>
+                            <tr><td><code>10:7</code></td><td>Register A</td><td>First operand and destination.</td></tr>
+                            <tr><td><code>6:3</code></td><td>Register B</td><td>Second operand.</td></tr>
+                            <tr><td><code>2:0</code></td><td>Unused</td><td>Set to zero by the program's encoder.</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section class="story-entry" aria-labelledby="mmio">
+                    <p class="eyebrow">CONNECTING THE GAME HARDWARE</p>
+                    <h2 id="mmio">Memory-mapped game state</h2>
+                    <p>Load and store instructions access the game registers at <code>0xF0</code>
+                        through <code>0xFD</code>. The CPU reads key states and timing flags, then
+                        writes ball positions, paddle positions, directions, speed, and scores.</p>
+                    <table class="register-map">
+                        <caption>Game and input register map</caption>
+                        <thead><tr><th scope="col">Address</th><th scope="col">State</th><th scope="col">Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>0xF0–0xF4</code></td><td>Ball</td><td>X, Y, direction, and speed.</td></tr>
+                            <tr><td><code>0xF5–0xF8</code></td><td>Paddles &amp; scores</td><td>Player and computer paddle positions and scores.</td></tr>
+                            <tr><td><code>0xF9–0xFB</code></td><td>Control flags</td><td>Pause, reset, and game-over state.</td></tr>
+                            <tr><td><code>0xFC</code></td><td>Keyboard</td><td>Read the held-key state.</td></tr>
+                            <tr><td><code>0xFD</code></td><td>Frame ready</td><td>Coordinate game updates with VGA timing.</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section class="story-entry" aria-labelledby="keyboard">
+                    <p class="eyebrow">ADDING PLAYER INPUT</p>
+                    <h2 id="keyboard">Reading the PS/2 keyboard</h2>
+                    <p>The receiver synchronizes the external PS/2 clock and data signals to the FPGA
+                        clock, detects falling clock edges, and captures scan-code frames. Start, stop,
+                        and odd-parity checks reject invalid frames.</p>
+                    <p>A key-state module converts make and break codes into held-key flags.
+                        The CPU reads those flags through the keyboard register.</p>
+                    <table class="register-map">
+                        <caption>Keyboard controls in the current game program</caption>
+                        <thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead>
+                        <tbody>
+                            <tr><td><kbd>W</kbd></td><td>Move the player paddle up.</td></tr>
+                            <tr><td><kbd>S</kbd></td><td>Move the player paddle down.</td></tr>
+                            <tr><td><kbd>P</kbd></td><td>Pause while held; release to resume.</td></tr>
+                            <tr><td><kbd>R</kbd></td><td>Reset the game.</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section class="story-entry" aria-labelledby="game">
+                    <p class="eyebrow">RUNNING PONG AS A PROGRAM</p>
+                    <h2 id="game">Movement, collisions, and scoring</h2>
+                    <p>The Pong program is encoded directly in instruction ROM using Verilog encoding
+                        functions and named jump targets. It polls the frame-ready register, which
+                        hardware sets every three VGA frames, then clears the flag before updating the game.</p>
+                    <p>Each update moves the player paddle from keyboard input, moves the computer paddle
+                        toward the ball, and advances the ball using its direction and speed. Boundary and
+                        paddle checks reverse its direction. Paddle hits increase speed up to a fixed limit.</p>
+                    <p>When the ball passes a paddle, the program increments the opposing score and
+                        resets the ball position and speed for the next round.</p>
+                </section>
+                <section class="story-entry" aria-labelledby="display">
+                    <p class="eyebrow">MAKING THE GAME VISIBLE</p>
+                    <h2 id="display">Rendering directly to VGA</h2>
+                    <p>The VGA driver generates 640 &times; 480 timing, pixel coordinates, and a
+                        frame-timing pulse. The renderer compares each pixel coordinate with the game
+                        registers to draw the ball, paddles, dashed center line, and seven-segment-style scores.</p>
+                    <p>Graphics are generated as the display is scanned, without a framebuffer.
+                        Game coordinates are scaled by four for display, and the renderer outputs
+                        four bits each for red, green, and blue.</p>
+                </section>
+                <section class="story-entry" aria-labelledby="demo">
+                    <p class="eyebrow">THE PROJECT DEMO</p>
+                    <h2 id="demo">Playing Pong on the custom CPU</h2>
+                    <p>The demo shows the custom processor running Pong on the Basys 3 FPGA.
+                        It brings together instruction execution, memory-mapped game state,
+                        keyboard input, and hardware rendering.</p>
+                    <figure class="project-media">
+                        <iframe class="demo-embed" src="https://www.youtube-nocookie.com/embed/fZ1A6Zc7FXc?start=2"
+                            title="Custom 16-bit CPU running Pong on the Basys 3 FPGA" aria-describedby="demo-caption"
+                            loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe>
+                        <figcaption id="demo-caption"><span>Pong hardware demo</span>The custom CPU and game engine running together. Playback starts at two seconds.</figcaption>
+                    </figure>
+                    <a class="text-link" href="https://www.youtube.com/watch?v=fZ1A6Zc7FXc&amp;t=2s">Watch on YouTube &nearr;</a>
+                </section>
+            </article>
+            <aside class="story-sidebar" aria-labelledby="project-details">
+                <h2 id="project-details" class="eyebrow">SUMMARY</h2>
+                <dl>
+                    <dt>Hardware</dt><dd>Digilent Basys 3<br>Xilinx Artix-7</dd>
+                    <dt>Language</dt><dd>Verilog</dd>
+                    <dt>Processor</dt><dd>16-bit custom ISA<br>16 general-purpose registers</dd>
+                    <dt>Program storage</dt><dd>Instruction ROM</dd>
+                    <dt>Input</dt><dd>PS/2 keyboard</dd>
+                    <dt>Display</dt><dd>640 &times; 480 VGA<br>12-bit RGB</dd>
+                </dl>
+                <a class="button" href="https://github.com/Zayaan-K/16bit-Custom-CPU-with-Pong-Game-Engine">View source</a>
+                <nav class="story-nav" aria-label="Project sections">
+                    <a href="#cpu">16-bit processor</a>
+                    <a href="#isa">Custom ISA</a>
+                    <a href="#mmio">Game registers</a>
+                    <a href="#keyboard">Keyboard input</a>
+                    <a href="#game">Pong program</a>
+                    <a href="#display">VGA rendering</a>
+                    <a href="#demo">Hardware demo</a>
+                </nav>
+            </aside>
+        </div>
+        <nav class="project-pagination" aria-label="Adjacent projects">
+            <a href="cpu-rasterizer.html"><span>&larr; Previous project</span><strong>CPU Rasterizer</strong></a>
+            <a href="ps1-emulator.html"><span>Next project &rarr;</span><strong>PS1 Emulator</strong></a>
+        </nav>
+    </main>
+    <footer><span>&copy; 2026 Zayaan Khandakar</span></footer>
 </body>
 </html>
