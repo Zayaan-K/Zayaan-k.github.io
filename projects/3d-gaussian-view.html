@@ -1,58 +1,150 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Page Under Construction | Zayaan Khandakar</title>
-
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #101418;
-      color: #edf1ee;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-
-    main {
-      max-width: 600px;
-      padding: 32px;
-    }
-
-    h1 {
-      color: #cdf86f;
-      font-size: clamp(32px, 6vw, 48px);
-    }
-
-    p {
-      color: #a7b1b6;
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 24px;
-      border: 1px solid #cdf86f;
-      border-radius: 6px;
-      color: #cdf86f;
-      text-decoration: none;
-    }
-
-    a:hover {
-      background: #cdf86f;
-      color: #101418;
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="A Python Gaussian bell-surface viewer with custom NumPy rendering, two camera views, transparency, and reference-image comparison.">
+    <meta name="theme-color" content="#101418">
+    <title>3D Gaussian View | Zayaan Khandakar</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/project-story.css">
+    <link rel="stylesheet" href="../assets/project-technical.css">
 </head>
-
 <body>
-  <main>
-    <h1>Page Under Construction</h1>
-  </main>
+    <a class="skip" href="#main">Skip to content</a>
+    <header>
+        <a class="brand" href="../index.html" aria-label="Zayaan Khandakar home">
+            <span class="monogram">ZK<span>_</span></span><span>ZAYAAN KHANDAKAR</span>
+        </a>
+        <nav aria-label="Main navigation"><a href="../index.html#projects">Projects</a></nav>
+    </header>
+    <main id="main" class="detail story-project">
+        <a class="back" href="../index.html#machine-learning">&larr; Back to machine learning projects</a>
+        <section class="detail-hero" aria-labelledby="project-title">
+            <p class="eyebrow">COMPUTER GRAPHICS / MULTIVIEW GEOMETRY</p>
+            <h1 id="project-title">3D Gaussian View<span class="accent">.</span></h1>
+            <p class="subtitle">A bell-shaped surface. Two cameras. A custom rendering pipeline.</p>
+            <p class="project-summary">An interactive Python viewer for exploring Gaussian surface geometry,
+                perspective projection, and transparency.</p>
+            <div class="tags" aria-label="Project technologies">
+                <span>Python</span><span>NumPy</span><span>PySide6</span><span>Matplotlib</span>span>Pytorch</span>
+            </div>
+            <a class="text-link" href="#viewer">View the renderer demo &darr;</a>
+        </section>
+        <div class="detail-body">
+            <article class="project-story" aria-label="Gaussian renderer development story">
+                <section class="story-entry" aria-labelledby="geometry">
+                    <p class="eyebrow">THE FOUNDATION</p>
+                    <h2 id="geometry">Defining the Gaussian surface</h2>
+                    <p>A bivariate Gaussian defines the height of a bell-shaped surface in 3D.
+                        Amplitude controls the peak, while independent X and Y spreads control its width.
+                        Rotation and translation position the resulting surface in the scene.</p>
+                    <div class="coverage-rule">
+                        <code>z = A &middot; exp(&minus;0.5 &middot; ((x / &sigma;x)&sup2; + (y / &sigma;y)&sup2;))</code>
+                        <p>A is the amplitude; &sigma;x and &sigma;y are the spreads along the two local axes.</p>
+                    </div>
+                    <p>The renderer samples a 29 &times; 29 grid spanning &plusmn;3.5 standard deviations
+                        along each local axis, then triangulates it. A height-based color tint makes the
+                        curvature visible, and the surface's tail ends at the grid boundary.</p>
+                </section>
+                <section class="story-entry" aria-labelledby="projection">
+                    <p class="eyebrow">DISPLAY</p>
+                    <h2 id="projection">Rendering two camera views</h2>
+                    <p>The display is a PySide6 desktop window with an embedded Matplotlib canvas. The NumPy renderer generates both camera images. It applies object
+                        transforms, converts vertices into camera coordinates, clips triangles against
+                        near and far planes, and projects them into each 256 &times; 256 image.</p>
+                    <ol class="signal-flow" aria-label="Rendering pipeline">
+                        <li><strong>Transform &rarr;</strong><span>Rotate and translate the mesh, then apply the inverse camera pose.</span></li>
+                        <li><strong>Project &rarr;</strong><span>Clip triangles and map camera coordinates to image pixels.</span></li>
+                        <li><strong>Rasterize</strong><span>Interpolate depth and color with perspective correction at pixel centers.</span></li>
+                    </ol>
+                    <p>Each camera has independent position, translation, rotation, and focal-length
+                        controls. The orbitable Matplotlib panel provides a separate geometry preview;
+                        orbiting it leaves the two calibrated camera views unchanged.</p>
+                </section>
+                <section class="story-entry" aria-labelledby="viewer">
+                    <p class="eyebrow">BASE DEMO</p>
+                    <h2 id="viewer">Shape and camera pose</h2>
+                    <p>The PySide6 interface brings surface controls, camera settings, two rendered
+                        images, and the 3D preview into one workspace. Adjusting height, spread, pose,
+                        or opacity reveals how the same geometry appears from different viewpoints.</p>
+                    <figure class="project-media">
+                        <a href="../assets/Gaussian_Renderer/gaussian-view.png" aria-label="Open full-size Gaussian viewer screenshot">
+                            <img src="../assets/Gaussian_Renderer/gaussian-view.png" width="1500" height="900"
+                                alt="Gaussian surface controls beside two rendered camera images and a blue bell-shaped 3D geometry preview"
+                                loading="lazy" decoding="async">
+                        </a>
+                        <figcaption><span>two perspectives view</span>Surface parameters alongside both camera renders and the orbitable geometry preview.</figcaption>
+                    </figure>
+                </section>
+                <section class="story-entry" aria-labelledby="transparency">
+                    <p class="eyebrow">OVERLAPPING SURFACES</p>
+                    <h2 id="transparency">Compositing transparency by depth</h2>
+                    <p>An optional second orange bell makes overlap and intersection visible.
+                        The rasterization process sorts transparent fragments by depth at each pixel and composites
+                        them from far to near. Shared triangle edges contribute only once.</p>
+                    <div class="coverage-rule">
+                        <code>Cout = &alpha;front &middot; Cfront + (1 &minus; &alpha;front) &middot; Cback</code>
+                        <p>Opacity applies at each surface intersection as the front color blends over the accumulated background.</p>
+                    </div>
+                    <figure class="project-media">
+                        <a href="../assets/Gaussian_Renderer/alpha-overlap.png" aria-label="Open full-size transparent surface overlap screenshot">
+                            <img src="../assets/Gaussian_Renderer/alpha-overlap.png" width="1500" height="900"
+                                alt="Overlapping blue and orange Gaussian bells rendered from two cameras beside their 3D preview"
+                                loading="lazy" decoding="async">
+                        </a>
+                        <figcaption><span>Two transparent bells</span>Depth-sorted compositing in the camera images; the Matplotlib preview uses approximate transparency.</figcaption>
+                    </figure>
+                </section>
+                <section class="story-entry" aria-labelledby="comparison">
+                    <p class="eyebrow">COMPARISON AND REPRODUCIBILITY</p>
+                    <h2 id="comparison">Comparing renders with references</h2>
+                    <p>Load reference images for each camera or capture the current views as references.
+                        The viewer displays RGB mean squared error and absolute difference images while
+                        parameters are adjusted manually. Reference comparison does not automatically fit the scene.</p>
+                    <p>Export saves scene parameters and camera calibration in <code>scene.json</code>,
+                        rendered PNG images, and NPZ arrays containing floating-point RGB, accumulated
+                        alpha, and nearest contributing depth. The scene can be reloaded for repeatable renders.</p>
+                    <p>Meaningful comparisons require matching camera calibration, framing, resolution,
+                        and color conventions. MSE uses stored RGB values without sRGB linearization;
+                        single-sample raster edges can show aliasing.</p>
+                </section>
+                <section class="story-entry story-entry-current" aria-labelledby="machine-learning">
+                    <p class="eyebrow">Section under construction</p>
+                    <h2 id="machine-learning">Machine learning</h2>
+                    <p>The current project implements rendering and manual image comparison.</p>
+                    <p>The scene and camera parameters are independent of the interface, providing an
+                        integration point for model to supply estimated Gaussian parameters.
+                        Those parameters can then be rendered and compared with calibrated reference views.</p>
+                </section>
+            </article>
+            <aside class="story-sidebar" aria-labelledby="project-details">
+                <h2 id="project-details" class="eyebrow">SUMMARY</h2>
+                <dl>
+                    <dt>Language</dt><dd>Python</dd>
+                    <dt>Renderer</dt><dd>Custom NumPy CPU rasterizer</dd>
+                    <dt>Geometry</dt><dd>Gaussian height field<br>29 &times; 29 sample grid</dd>
+                    <dt>Interface</dt><dd>PySide6 / Matplotlib</dd>
+                    <dt>Camera views</dt><dd>Two 256 &times; 256 images</dd>
+                    <dt>Machine learning</dt><dd>Section under construction</dd>
+                </dl>
+                <nav class="story-nav" aria-label="Project sections">
+                    <a href="#geometry">Gaussian geometry</a>
+                    <a href="#projection">Camera rendering</a>
+                    <a href="#viewer">Interactive demo</a>
+                    <a href="#transparency">Transparency</a>
+                    <a href="#comparison">Reference comparison</a>
+                    <a href="#machine-learning">Machine learning</a>
+                </nav>
+            </aside>
+        </div>
+        <nav class="project-pagination" aria-label="Adjacent projects">
+            <a href="3d-cube-view.html"><span>&larr; Previous project</span><strong>3D Cube Reconstruction</strong></a>
+            <a href="../index.html#projects"><span>Explore more &rarr;</span><strong>All projects</strong></a>
+        </nav>
+    </main>
+    <footer><span>&copy; 2026 Zayaan Khandakar</span></footer>
+    <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dc039c1345f4ae7b51e51132cb0a4e8"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
