@@ -1,59 +1,257 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Page Under Construction | Zayaan Khandakar</title>
-
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #101418;
-      color: #edf1ee;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-
-    main {
-      max-width: 600px;
-      padding: 32px;
-    }
-
-    h1 {
-      color: #cdf86f;
-      font-size: clamp(32px, 6vw, 48px);
-    }
-
-    p {
-      color: #a7b1b6;
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 24px;
-      border: 1px solid #cdf86f;
-      border-radius: 6px;
-      color: #cdf86f;
-      text-decoration: none;
-    }
-
-    a:hover {
-      background: #cdf86f;
-      color: #101418;
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="RISC-V Compiler: a C++17 compiler, assembler, and linker targeting RV32I, with register allocation, a PySide6 IDE, and firmware validated against CPU RTL.">
+    <meta name="theme-color" content="#101418">
+    <title>RISC-V Compiler | Zayaan Khandakar</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/project-story.css">
+    <link rel="stylesheet" href="../assets/project-technical.css">
+    <link rel="stylesheet" href="../assets/compiler.css">
 </head>
-
 <body>
-  <main>
-    <h1>Page Under Construction</h1>
-  </main>
+    <a class="skip" href="#main">Skip to content</a>
+    <header>
+        <a class="brand" href="../index.html" aria-label="Zayaan Khandakar home">
+            <span class="monogram">ZK<span>_</span></span><span>ZAYAAN KHANDAKAR</span>
+        </a>
+        <nav aria-label="Main navigation"><a href="../index.html#projects">Projects</a></nav>
+    </header>
+    <main id="main" class="detail story-project compiler-project">
+        <a class="back" href="../index.html#software">&larr; Back to software projects</a>
+        <section class="detail-hero" aria-labelledby="project-title">
+            <p class="eyebrow">SOFTWARE / COMPILERS &amp; COMPUTER ARCHITECTURE</p>
+            <h1 id="project-title">RISC-V Compiler<span class="accent">.</span></h1>
+            <p class="subtitle">C code to linked firmware and verified against CPU RTL.</p>
+            <p class="project-summary">RISC-V Compiler uses a native C++17 compiler with an Arduino-like
+                IDE enviroment. Its own backend, assembler, and linker turn a small C subset into RV32I
+                reset images, with register allocation, local simulation, and automated validation. Currently 
+                only valid target is the RSIC-V Rasterizer SoC, more advanced SoC enviroments are to come. 
+               </p>
+            <div class="tags" aria-label="Project technologies and status">
+                <span>C++17</span><span>RV32I</span><span>Python / PySide6</span>
+                <span class="detail-status">RTL-validated firmware</span>
+            </div>
+            <a class="text-link" href="#demo">See the compiler in action &darr;</a>
+        </section>
+        <figure id="demo" class="project-media">
+                        <a href="../assets/RISC_V_Compiler/01-editor-and-successful-run.png" aria-label="Open full-size editor and successful run screenshot">
+                            <img src="../assets/RISC_V_Compiler/01-editor-and-successful-run.png" width="1920" height="1080"
+                                alt="RISC-V Compiler IDE showing Basics.c with an array-summing function and a successful simulation returning 50" decoding="async">
+                        </a>
+                        <figcaption><span>Editor and successful run</span>The Basics example compiles and returns 50. Demo screenshots show the earlier compiler baseline; instruction and stack counts differ in the updated backend.</figcaption>
+                    </figure>
+        <div class="detail-body">
+            <article class="project-story" aria-label="RISC-V Compiler development story">
+                <section class="story-entry" aria-labelledby="pipeline">
+                    <p class="eyebrow">THE COMPILATION PATH</p>
+                    <h2 id="pipeline">Turning source into machine code</h2>
+                    <p>The compiler handles the full path from source text to executable instruction words.
+                        A lexer and recursive-descent parser build an abstract syntax tree. Typed constant
+                        evaluation, scoped symbol tables, and type checking lead into register allocation,
+                        stack-frame construction, and assembly generation.</p>
+                    <p>A built-in assembler encodes instructions into relocatable RVO1 objects. The linker
+                        lays out sections, resolves symbols, and patches relocations to produce a reset
+                        image, without LLVM or an external RISC-V cross-toolchain. The final listing
+                        exposes each instruction's address, encoded word, and assembly representation.</p>
+                    <ol class="signal-flow" aria-label="Compilation stages">
+                        <li><strong>C source &rarr;</strong><span>Tokenize and parse expressions, declarations, and functions.</span></li>
+                        <li><strong>Assembly &rarr;</strong><span>Check types and scopes, allocate expression registers, and generate assembly.</span></li>
+                        <li><strong>Linked RV32I image</strong><span>Assemble RVO1 objects, resolve symbols, and apply relocations.</span></li>
+                    </ol>
+                </section>
+                <section class="story-entry" aria-labelledby="language">
+                    <p class="eyebrow">A FOCUSED C SUBSET</p>
+                    <h2 id="language">Supporting real program structure</h2>
+                    <p>The language supports 32-bit signed and unsigned integers, signed characters,
+                        pointers, volatile accesses, and fixed-size one-dimensional arrays. Programs can
+                        use globals, block-scoped locals, conditionals, loops, and recursive function calls.</p>
+                    <p>Arithmetic, bitwise operations, pointer arithmetic, and short-circuit Boolean
+                        expressions are supported. This example computes 6! using recursion and software
+                        multiplication on the base integer instruction set.</p>
+                    <figure class="compiler-code">
+                        <figcaption>Recursion.c <span>Example sketch &middot; returns 720</span></figcaption>
+                        <pre tabindex="0" aria-label="Recursive factorial example in C"><code>int factorial(int n) {
+    if (n &lt;= 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+int main(void) {
+    return factorial(6);
+}</code></pre>
+                    </figure>
+
+                    <figure class="project-media">
+                        <a href="../assets/RISC_V_Compiler/03-recursion.png" aria-label="Open full-size recursive factorial screenshot">
+                            <img src="../assets/RISC_V_Compiler/03-recursion.png" width="1920" height="1080"
+                                alt="Recursion.c in the IDE with factorial source and simulation output showing return value 720" loading="lazy" decoding="async">
+                        </a>
+                        <figcaption><span>Recursive factorial</span>The earlier demo shows factorial returning 720. The updated backend also passes the recursive factorial case in CPU RTL simulation.</figcaption>
+                    </figure>
+                    <p>The current compiler processes one translation unit and has no standard library.
+                        Preprocessing, floating point, structs, and dynamic allocation are outside the
+                        current subset. Unsupported constructs produce source diagnostics.</p>
+                </section>
+                <section class="story-entry" aria-labelledby="backend">
+                    <p class="eyebrow">TARGETING THE BASE ISA</p>
+                    <h2 id="backend">Making a self-contained reset image</h2>
+                    <p>The backend uses RV32I instructions only, lowering multiplication and signed or
+                        unsigned division into software loops. Calls pass up to eight arguments in
+                        <code>a0</code>&ndash;<code>a7</code>, return in <code>a0</code>, preserve
+                        <code>s0</code>&ndash;<code>s11</code> and <code>ra</code>, and align the stack to 16 bytes at call boundaries.</p>
+                    <p>Startup initializes the stack pointer, zeroes global storage, applies global
+                        initializers, and calls the entry function before parking in a halt loop.
+                        A greedy allocator keeps expression temporaries in <code>s1</code>&ndash;<code>s11</code>
+                        and spills to the stack when the register pool is exhausted. Locals remain in
+                        stack slots; this is expression register allocation rather than global optimization.</p>
+                    <table class="register-map">
+                        <caption>Six artifacts generated from a normal C build</caption>
+                        <thead><tr><th scope="col">Output</th><th scope="col">Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>.s</code></td><td>Generated assembly accepted by the built-in assembler.</td></tr>
+                            <tr><td><code>.rvo</code></td><td>Relocatable RVO1 object containing symbols and relocations.</td></tr>
+                            <tr><td><code>.mem</code></td><td>Hexadecimal instruction words for FPGA memory initialization with <code>$readmemh</code>.</td></tr>
+                            <tr><td><code>.bin</code></td><td>Raw little-endian instruction bytes.</td></tr>
+                            <tr><td><code>.asm</code></td><td>Instruction addresses, encoded words, and a readable listing.</td></tr>
+                            <tr><td><code>.map.json</code></td><td>Entry and halt addresses, memory sizes, and code/data symbols.</td></tr>
+                        </tbody>
+                    </table>
+                    <figure class="project-media">
+                        <a href="../assets/RISC_V_Compiler/04-rv32i-machine-code.png" aria-label="Open full-size generated rv32i machine code screenshot">
+                            <img src="../assets/RISC_V_Compiler/04-rv32i-machine-code.png" width="1920" height="1080"
+                                alt="RV32I listing tab displaying addresses, hexadecimal instruction words, and decoded instructions for Recursion.c" loading="lazy" decoding="async">
+                        </a>
+                        <figcaption><span>Generated RV32I machine code</span>The listing pairs instruction addresses with 32-bit machine words and decoded operations.</figcaption>
+                    </figure>
+                </section>
+                <section class="story-entry" aria-labelledby="linker">
+                    <p class="eyebrow">ASSEMBLER &amp; LINKER</p>
+                    <h2 id="linker">Calling a separately assembled library</h2>
+                    <p>The toolchain can compile one C firmware object and link it with assembly
+                        libraries. In the linked example, C evaluates <code>4 + twice(19)</code> while
+                        an assembly function doubles its argument. The linker resolves the external
+                        function reference and patches the call; execution returns 42.</p>
+                    <figure class="compiler-code">
+                        <figcaption>Separate compilation <span>CLI workflow &middot; C firmware plus an assembly library</span></figcaption>
+                        <pre tabindex="0" aria-label="Commands to compile, assemble, and link firmware"><code>rasterc examples/linked/main.c --emit-object -o build/linked/main
+rasterc --assemble examples/linked/twice.s -o build/linked/twice
+rasterc --link build/linked/main.rvo build/linked/twice.rvo -o build/linked/firmware</code></pre>
+                    </figure>
+                    <p>The assembler supports RV32I instructions, register aliases, labels,
+                        pseudo-instructions, and text/data directives. Six relocation kinds cover
+                        absolute addresses, high and low address parts, jumps, and branches. The linker
+                        rejects duplicate exports, undefined symbols, memory overflow, and invalid relocation ranges.</p>
+                    <p>RVO1 is a custom object format. Each C object includes startup and absolute global
+                        storage, so multiple C translation units are not yet supported. Library linking
+                        uses the CLI; the IDE builds individual C files. Linked assembly data also produces
+                        <code>.data.bin</code> and <code>.data.mem</code> images for initializing data RAM.</p>
+                </section>
+                <section class="story-entry" aria-labelledby="ide">
+                    <p class="eyebrow">THE DESKTOP WORKFLOW</p>
+                    <h2 id="ide">User GUI & IDE</h2>
+                    <p>The PySide6 IDE brings the compiler, editor, and simulator into one workflow.
+                        The editor provides syntax highlighting, line numbers, automatic indentation, find,
+                        and unsaved-change protection. Clicking a diagnostic jumps to its source line and column.</p>
+                    <div class="architecture-notes" aria-label="IDE workflow">
+                        <div><h3>Verify &middot; Ctrl+R</h3><p>Save and compile a sketch, then report instruction and data memory usage.</p></div>
+                        <div><h3>Run &middot; F5</h3><p>Execute locally and inspect the return value, registers, globals, and the instruction listing.</p></div>
+                        <div><h3>Export .mem</h3><p>Copy all six build artifacts, including assembly and the relocatable object.</p></div>
+                    </div>
+                    <p>Compilation runs through <code>QProcess</code>, while simulation advances in
+                        timer-driven batches to keep the interface responsive. Stop interrupts either
+                        operation. Board profiles select the Basys 3 memory limits or a larger simulation target.</p>
+                    <figure class="project-media">
+                        <a href="../assets/RISC_V_Compiler/02-global-memory.png" aria-label="Open full-size inspecting global memory screenshot">
+                            <img src="../assets/RISC_V_Compiler/02-global-memory.png" width="1920" height="1080"
+                                alt="Registers and globals tab showing result at address 0x00000024 with value 0x00000032" loading="lazy" decoding="async">
+                        </a>
+                        <figcaption><span>Inspecting global memory</span>The result global contains 0x00000032, the hexadecimal representation of decimal 50.</figcaption>
+                    </figure>
+                </section>
+                <section class="story-entry" aria-labelledby="hardware">
+                    <p class="eyebrow">THE FPGA TARGET</p>
+                    <h2 id="hardware">Exporting for the custom processor</h2>
+                    <p>The default target matches the <a class="text-link" href="cpu-rasterizer.html">CPU
+                        rasterizer project</a>: a reset address of zero, 1,024 instruction words, and
+                        4,096 bytes of data RAM. The generated memory image can be selected as
+                        <code>INSTRUCTION_INIT_FILE</code> in Vivado.</p>
+                    <p>Generated firmware has been validated in Vivado simulation against the reference
+                        CPU and data-memory RTL. Hardware upload transport and Arduino APIs are future extensions; the current workflow exports files
+                        for integration with the hardware project.</p>
+                    <p>Support for more advanced microcontroller ecosystems is planned for future releases.</p>
+                </section>
+                <section class="story-entry" aria-labelledby="verification">
+                    <p class="eyebrow">CHECKING EXECUTED BEHAVIOR</p>
+                    <h2 id="verification">Checking firmware against the interpreter and RTL</h2>
+                    <p>The recorded October 20, 2026 validation run passed 20 compiler tests,
+                        8 toolchain tests, 5 IDE tests, and 10 RTL firmware cases using Vivado Simulator
+                        v2026.1. The RTL report records passing results for all ten firmware cases.</p>
+                    <p>Errors stay connected to the source. In this example, a misspelled variable is
+                        reported with its line and column, and selecting the diagnostic highlights the location.</p>
+                    <figure class="project-media">
+                        <a href="../assets/RISC_V_Compiler/06-source-diagnostics.png" aria-label="Open full-size source diagnostics screenshot">
+                            <img src="../assets/RISC_V_Compiler/06-source-diagnostics.png" width="1920" height="1080"
+                                alt="Problems panel reporting unknown variable totla at 10:12 with the misspelled return expression selected in the editor" loading="lazy" decoding="async">
+                        </a>
+                        <figcaption><span>Source diagnostics</span>A deliberate totla typo reports an unknown variable at line 10, column 12. Selecting the problem navigates to the source.</figcaption>
+                    </figure>
+                    <p>The compiler test suite executes generated machine code in an independent
+                        instruction interpreter, checking program results alongside instruction generation.</p>
+                    <ul class="verification-list">
+                        <li><strong>Language and arithmetic:</strong> arrays, pointers, recursion, and randomized
+                            signed/unsigned multiplication and division edge cases.</li>
+                        <li><strong>Execution and memory:</strong> calling convention and stack restoration,
+                            register allocation and spills, memory limits, and source diagnostics.</li>
+                        <li><strong>Assembler and linker:</strong> instruction encodings, assembly round trips,
+                            cross-object calls, all six relocation kinds, symbol errors, and range checks.</li>
+                        <li><strong>IDE integration:</strong> offscreen GUI tests exercise asynchronous builds,
+                            source navigation, simulation cancellation, and target changes.</li>
+                    </ul>
+                    <p>For each RTL case, the harness checks the expected return value, all 32 final
+                        registers, all 4,096 bytes of final RAM, and the executed instruction count
+                        against the independent Python interpreter. Cases include recursion, pointers,
+                        division, byte memory, control flow, eight arguments, register spills, and a
+                        separately assembled library call. CPU faults and timeouts fail validation.</p>
+                    <p>The simulator detects stack/global collisions, misaligned accesses, unknown opcodes,
+                        and unmapped memory. The IDE enforces a five-million-instruction execution budget.
+                        RTL validation covers the reference CPU and data memory; rasterizer behavior,
+                        full SoC integration, and execution on a physical FPGA remain outside that scope.</p>
+                </section>
+            </article>
+            <aside class="story-sidebar" aria-labelledby="project-details">
+                <h2 id="project-details" class="eyebrow">SUMMARY</h2>
+                <dl>
+                    <dt>Project</dt><dd>RISC-V Compiler</dd>
+                    <dt>Toolchain</dt><dd>C++17 compiler,<br>assembler, and linker</dd>
+                    <dt>Desktop IDE</dt><dd>Python / PySide6</dd>
+                    <dt>Source language</dt><dd>Small C subset</dd>
+                    <dt>Target</dt><dd>RV32I<br>Basys 3 memory profile</dd>
+                    <dt>Output</dt><dd>Assembly, RVO1 objects,<br>machine code, and memory images</dd>
+                    <dt>Validation</dt><dd>10 passing CPU RTL cases<br>Vivado Simulator v2026.1</dd>
+                </dl>
+                <nav class="story-nav" aria-label="Project sections">
+                    <a href="#demo">Editor demo</a>
+                    <a href="#pipeline">Compiler pipeline</a>
+                    <a href="#language">C language subset</a>
+                    <a href="#backend">RV32I backend</a>
+                    <a href="#linker">Assembler &amp; linker</a>
+                    <a href="#ide">Desktop IDE</a>
+                    <a href="#hardware">FPGA target</a>
+                    <a href="#verification">Verification</a>
+                </nav>
+            </aside>
+        </div>
+        <nav class="project-pagination" aria-label="Project navigation">
+            <a href="../index.html#projects"><span>&larr; Portfolio</span><strong>All projects</strong></a>
+            <a href="cpu-rasterizer.html"><span>Related project &rarr;</span><strong>CPU Rasterizer</strong></a>
+        </nav>
+    </main>
+    <footer><span>&copy; 2026 Zayaan Khandakar</span></footer>
     <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0dc039c1345f4ae7b51e51132cb0a4e8"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

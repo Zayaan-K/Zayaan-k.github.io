@@ -1,0 +1,34 @@
+.compiler-code {
+    margin: 28px 0;
+    min-width: 0;
+    border: 1px solid var(--line);
+    background: var(--panel);
+}
+
+.compiler-code figcaption {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    color: var(--accent);
+    font-size: 14px;
+}
+
+.compiler-code figcaption span {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.compiler-code pre {
+    margin: 0;
+    padding: 20px;
+    overflow-x: auto;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.75;
+    tab-size: 4;
+}
+
+.compiler-project .story-entry > p code {
+    overflow-wrap: anywhere;
+}
