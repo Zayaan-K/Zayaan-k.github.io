@@ -389,6 +389,52 @@ h4 {
     line-height: 1
 }
 
+.featured-project {
+    margin-top: 24px;
+    padding: 30px;
+    border: 1px solid #718448;
+    background: var(--panel);
+}
+
+.featured-project .section-heading {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 24px;
+}
+
+.featured-project .project-card {
+    background: var(--bg);
+}
+
+.featured-link {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+}
+
+.featured-image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.featured-name {
+    font-size: 29px;
+    letter-spacing: -.7px;
+    line-height: 1.2;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 700px) {
+    .featured-project {
+        padding: 20px;
+    }
+
+    .featured-link {
+        grid-template-columns: 1fr;
+    }
+}
+
 .about {
     margin-top: 95px;
     padding: 65px 0 85px;
